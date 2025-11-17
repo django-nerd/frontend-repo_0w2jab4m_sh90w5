@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 export default function CTA() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
@@ -16,7 +17,7 @@ export default function CTA() {
       })
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error('Submission failed')
-      setStatus({ state: 'success', note: data.stored ? 'Request received! We\'ll reach out shortly.' : 'Request received! (offline storage)'} )
+      setStatus({ state: 'success', note: data.stored ? "Request received! We'll reach out shortly." : 'Request received! (offline storage)'} )
       setForm({ name: '', email: '', phone: '', service: '', message: '' })
     } catch (e) {
       setStatus({ state: 'error', note: e.message })
@@ -24,12 +25,13 @@ export default function CTA() {
   }
 
   return (
-    <section id="contact" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <section id="contact" className="py-28 bg-gradient-to-b from-gray-50 to-white relative">
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(40rem_20rem_at_70%_10%,rgba(236,72,153,0.06),transparent)]" />
+      <div className="relative max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Tell us what you need</h2>
-            <p className="mt-3 text-gray-600 max-w-xl">Share a bit about your goals. We\'ll come back with the fastest path to impact and a clear, fixed quote.</p>
+            <motion.h2 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-3xl sm:text-4xl font-bold text-gray-900">Tell us what you need</motion.h2>
+            <motion.p initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.08 }} className="mt-3 text-gray-600 max-w-xl">Share a bit about your goals. We'll come back with the fastest path to impact and a clear, fixed quote.</motion.p>
             <ul className="mt-6 space-y-2 text-gray-700">
               <li>• Under 24h response</li>
               <li>• Fixed-fee or performance-based options</li>
@@ -37,7 +39,7 @@ export default function CTA() {
             </ul>
           </div>
 
-          <form onSubmit={submit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <motion.form onSubmit={submit} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input required value={form.name} onChange={(e)=>setForm({...form, name:e.target.value})} placeholder="Your name" className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-900"/>
               <input required type="email" value={form.email} onChange={(e)=>setForm({...form, email:e.target.value})} placeholder="Email" className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-900"/>
@@ -51,7 +53,7 @@ export default function CTA() {
             {status.state!=='idle' && (
               <p className={`mt-3 text-sm ${status.state==='error' ? 'text-red-600' : 'text-gray-700'}`}>{status.note}</p>
             )}
-          </form>
+          </motion.form>
         </div>
       </div>
     </section>
