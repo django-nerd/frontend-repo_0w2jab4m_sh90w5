@@ -5,6 +5,17 @@ export default function BackgroundFX() {
   const y1 = useTransform(scrollY, [0, 800], [0, -120])
   const y2 = useTransform(scrollY, [0, 800], [0, 120])
 
+  // Build an encoded SVG noise data URL to avoid JSX/arbitrary value parsing issues
+  const noiseSvg = `
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+      <filter id='n'>
+        <feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/>
+      </filter>
+      <rect width='100%' height='100%' filter='url(#n)'/>
+    </svg>
+  `
+  const noiseDataUrl = `data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}`
+
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       {/* Subtle grid */}
@@ -16,7 +27,16 @@ export default function BackgroundFX() {
 
       {/* Vignette + noise */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(0,0,0,0.05)_100%)]" />
-      <div className="absolute inset-0 mix-blend-soft-light opacity-[0.08] bg-[url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><filter id=\"n\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.75\" numOctaves=\"4\" stitchTiles=\"stitch\"/></filter><rect width=\"100%\" height=\"100%\" filter=\"url(%23n)\"/></svg>')]" />
+      <div
+        className="absolute inset-0"
+        style={{
+          mixBlendMode: 'soft-light',
+          opacity: 0.08,
+          backgroundImage: `url(${noiseDataUrl})`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'auto',
+        }}
+      />
     </div>
   )
 }
